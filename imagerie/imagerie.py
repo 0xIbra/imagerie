@@ -1,9 +1,17 @@
 from skimage.morphology import remove_small_objects
+
 from scipy.spatial.distance import cdist
-from numpy import array as np_array, argsort, where as np_where, vstack, int0, float32
+from scipy.ndimage.morphology import binary_fill_holes
+
+from numpy import array as np_array, argsort, where as np_where, vstack, int0, float32, ndarray
+
 from cv2 import (findContours, contourArea, goodFeaturesToTrack, getPerspectiveTransform, findHomography,
                  warpPerspective, RANSAC, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)
-from PIL.Image import Image, composite
+
+from PIL.Image import Image, composite, fromarray, open
+
+from skimage.io import imread as sk_imread
+from skimage.transform import resize as sk_resize
 
 
 def order_4_coordinates_clockwise(points: list):
@@ -155,3 +163,71 @@ def image_composite_with_mask(to_add: Image, destination: Image, mask: Image) ->
         mask = mask.convert('L')
 
     return composite(to_add, destination, mask=mask)
+
+
+def combine_two_images_with_mask(background_img, foreground_img, mask):
+    """ Selects and pastes the content from "foreground_img" to "background_img" with the help of the provided mask.
+    """
+
+    if type(background_img) is str:
+        background_img = open(background_img)
+
+    if type(background_img) is ndarray:
+        background_img = fromarray(background_img)
+
+    if type(background_img) is not Image:
+        raise Exception(f'Type of "background_img" must be one of these types [{Image}, {ndarray}, str]. "{type(background_img)}" given.')
+
+    if type(foreground_img) is str:
+        foreground_img = open(foreground_img)
+
+    if type(foreground_img) is ndarray:
+        foreground_img = fromarray(foreground_img)
+
+    if type(foreground_img) is not Image:
+        raise Exception(f'Type of "foreground_img" must be one of these types [{Image}, {ndarray}, str]. "{type(foreground_img)}" given.')
+
+    if type(mask) is str:
+        mask = open(mask, 'L')
+
+    if type(mask) is ndarray:
+        mask = fromarray(mask).convert('L')
+
+    if type(mask) is not Image:
+        raise Exception(f'Type of "mask" must be one of these types [{Image}, {ndarray}, str]. "{type(mask)}" given.')
+
+    return composite(foreground_img, background_img, mask=mask)
+
+
+def prepare_for_prediction_single(img: str, shape=(768, 768), as_array=True):
+    """ Loads and resizes the image to given shape (default: 768, 768) and returns as a numpy array.
+    """
+
+    img = sk_imread(img)
+    img = sk_resize(img, shape) / 255.0
+
+    out = img
+    if as_array:
+        out = np_array([out])
+
+    return out
+
+
+def prepare_for_prediction(imgs, shape=(768, 768)):
+    """ Loads and resizes each image in "imgs" to a given (default: 768, 768) shape and returns the result as a numpy array.
+    """
+
+    out = []
+    for img in imgs:
+        _img = prepare_for_prediction_single(img, shape=shape, as_array=False)
+
+        out.append(_img)
+
+    return np_array(out)
+
+
+def binary_fill_holes(img: ndarray):
+    """ Fills black holes that reside inside of a binary object (basically a white object in a grayscale image)
+    """
+
+    return binary_fill_holes(img)

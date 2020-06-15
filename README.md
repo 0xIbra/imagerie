@@ -11,7 +11,7 @@ the top-left.
 ##### `imagerie.remove_lonely_small_objects(grayscale)`
 This function removes small white objects from a binary mask.  
 
-##### `imagerie.biggst_contour(grayscale)`
+##### `imagerie.biggest_contour(grayscale)`
 Finds and retrieves the biggest contour from a grayscale image.  
 
 ##### `imagerie.get_biggest_contour(contours)`
@@ -35,3 +35,16 @@ Performs a `cv2.warpPerspective()` operation after `cv2.findHomography()`.
 ##### `imagerie.image_composite_with_mask(to_add: PIL.Image.Image, destination: PIL.Image.Image, mask: PIL.Image.Image)`
 Combines the `to_add` and `destination` images, `to_add` image will be added on top of `destination` image
 and only the white area from the `mask` image will be retained from `to_add` image.
+
+#### `imagerie.combine_two_images_with_mask(background_img, foreground_img, mask)`
+Combines the images with the help of the provided mask.
+Note that only the white area of the mask will be selected from the `foreground_img`.
+
+#### `imagerie.prepare_for_prediction_single(img, shape=(768, 768), as_array=True)`
+Loads and resizes a single image to a given shape (default: 768, 768) and returns it by default as a numpy array.
+
+#### `imagerie.prepare_for_prediction(imgs, shape=(768, 768))`
+Does the same thing as `imagerie.prepare_for_prediction_single` but for multiple images.  
+
+#### `imagerie.binary_fill_holes(img)`
+Fills black pixel holes that reside inside of a binary object.

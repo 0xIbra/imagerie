@@ -125,10 +125,10 @@ def get_corners(grayscale, middle_points=False, centroid=False, max_corners=4, q
         return [int0([c1, centroid_top, c2, c3, centroid_bottom, c4]), centroid]
 
 
-def warp_perspective(image, src_pts, dst_pts):
+def warp_perspective(image, src_pts, dst_pts, shape: tuple):
     """ Performs a warpPerspective() operation and expects the 4 (x, y) coordinates of the source and destination image. """
 
-    height, width = image.shape[:2]
+    width, height = shape
 
     src_pts = float32(src_pts)
     dst_pts = float32(dst_pts)
@@ -140,10 +140,10 @@ def warp_perspective(image, src_pts, dst_pts):
     return res
 
 
-def warp_homography(image, src_pts, dst_pts, method=RANSAC, reproj_threshold=5.0):
+def warp_homography(image, src_pts, dst_pts, shape: tuple, method=RANSAC, reproj_threshold=5.0):
     """ Performs a warpPerspective() operation after findHomography(). """
 
-    height, width = image.shape
+    width, height = shape
 
     src_pts = float32(src_pts)
     dst_pts = float32(dst_pts)

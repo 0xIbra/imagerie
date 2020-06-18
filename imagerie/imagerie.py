@@ -9,6 +9,7 @@ from cv2 import (findContours, contourArea, goodFeaturesToTrack, getPerspectiveT
                  warpPerspective, RANSAC, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)
 
 from PIL.Image import Image, composite, fromarray, open
+from PIL.JpegImagePlugin import JpegImageFile
 
 from skimage.io import imread as sk_imread
 from skimage.transform import resize as sk_resize
@@ -175,8 +176,8 @@ def combine_two_images_with_mask(background_img, foreground_img, mask):
     if type(background_img) is ndarray:
         background_img = fromarray(background_img)
 
-    if type(background_img) is not Image:
-        raise Exception(f'Type of "background_img" must be one of these types [{Image}, {ndarray}, str]. "{type(background_img)}" given.')
+    if type(background_img) is not Image or type(background_img) is not JpegImageFile:
+        raise Exception(f'Type of "background_img" must be one of these types [{Image}, {JpegImageFile}, {ndarray}, str]. "{type(background_img)}" given.')
 
     if type(foreground_img) is str:
         foreground_img = open(foreground_img)
@@ -184,8 +185,8 @@ def combine_two_images_with_mask(background_img, foreground_img, mask):
     if type(foreground_img) is ndarray:
         foreground_img = fromarray(foreground_img)
 
-    if type(foreground_img) is not Image:
-        raise Exception(f'Type of "foreground_img" must be one of these types [{Image}, {ndarray}, str]. "{type(foreground_img)}" given.')
+    if type(foreground_img) is not Image or type(foreground_img) is not JpegImageFile:
+        raise Exception(f'Type of "foreground_img" must be one of these types [{Image}, {JpegImageFile}, {ndarray}, str]. "{type(foreground_img)}" given.')
 
     if type(mask) is str:
         mask = open(mask, 'L')
@@ -193,8 +194,8 @@ def combine_two_images_with_mask(background_img, foreground_img, mask):
     if type(mask) is ndarray:
         mask = fromarray(mask).convert('L')
 
-    if type(mask) is not Image:
-        raise Exception(f'Type of "mask" must be one of these types [{Image}, {ndarray}, str]. "{type(mask)}" given.')
+    if type(mask) is not Image or type(mask) is not JpegImageFile:
+        raise Exception(f'Type of "mask" must be one of these types [{Image}, {JpegImageFile}, {ndarray}, str]. "{type(mask)}" given.')
 
     return composite(foreground_img, background_img, mask=mask)
 

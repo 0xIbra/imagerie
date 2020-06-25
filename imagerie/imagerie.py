@@ -1,7 +1,7 @@
 from skimage.morphology import remove_small_objects
 
 from scipy.spatial.distance import cdist
-from scipy.ndimage.morphology import binary_fill_holes
+from scipy.ndimage.morphology import binary_fill_holes as sk_binary_fill_holes
 
 from numpy import array as np_array, argsort, where as np_where, vstack, int0, float32, ndarray
 
@@ -13,6 +13,9 @@ from PIL.JpegImagePlugin import JpegImageFile
 
 from skimage.io import imread as sk_imread
 from skimage.transform import resize as sk_resize
+
+
+import numpy as np
 
 
 def order_4_coordinates_clockwise(points: list):
@@ -230,5 +233,14 @@ def prepare_for_prediction(imgs, shape=(768, 768)):
 def binary_fill_holes(img: ndarray):
     """ Fills black holes that reside inside of a binary object (basically a white object in a grayscale image)
     """
-
-    return binary_fill_holes(img)
+    mask = np.logical_not(input)
+    tmp = np.zeros(mask.shape, bool)
+    inplace = isinstance(output, numpy.ndarray)
+    if inplace:
+        binary_dilation(tmp, structure, -1, mask, output, 1, origin)
+        numpy.logical_not(output, output)
+    else:
+        output = binary_dilation(tmp, structure, -1, mask, None, 1,
+                                 origin)
+        numpy.logical_not(output, output)
+        return output

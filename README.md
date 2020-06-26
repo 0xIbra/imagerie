@@ -1,4 +1,5 @@
-# Imagerie
+Imagerie
+========
 > Python module grouping together useful computer vision functions and operations
 
 This module was initially created for myself for use in my notebooks to stop re-writing the same code and wasting time.

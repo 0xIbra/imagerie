@@ -1,21 +1,20 @@
-from skimage.morphology import remove_small_objects
-
-from scipy.spatial.distance import cdist
-from scipy.ndimage.morphology import binary_fill_holes as sk_binary_fill_holes
+from imagerie.operations.morphology import remove_small_objects, binary_fill_holes
 
 from numpy import array as np_array, argsort, where as np_where, vstack, int0, float32, ndarray
 
 from cv2 import (findContours, contourArea, goodFeaturesToTrack, getPerspectiveTransform, findHomography,
-                 warpPerspective, RANSAC, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)
+                 warpPerspective, imread, resize, threshold, morphologyEx, getStructuringElement)
+
+from cv2 import (RANSAC, RETR_EXTERNAL, CHAIN_APPROX_NONE, CHAIN_APPROX_SIMPLE, THRESH_BINARY, FILLED,
+                 MORPH_CLOSE, MORPH_ELLIPSE)
 
 from PIL.Image import Image, composite, fromarray, open
 from PIL.JpegImagePlugin import JpegImageFile
 
-from skimage.io import imread as sk_imread
-from skimage.transform import resize as sk_resize
-
+from imagerie.operations.img import img_as_uint, img_as_float
 
 import numpy as np
+import math
 
 
 def order_4_coordinates_clockwise(points: list):
@@ -37,18 +36,6 @@ def order_4_coordinates_clockwise(points: list):
     return np_array([tl, tr, br, bl])
 
 
-def remove_lonely_small_objects(grayscale):
-    """ Removes lonely small objects from binary mask, the \"grayscale\" parameter must be a grayscale. """
-
-    binary = np_where(grayscale > 0.1, 1, 0)
-    processed = remove_small_objects(binary.astype(bool))
-
-    mask_x, mask_y = np_where(processed == 0)
-    grayscale[mask_x, mask_y] = 0
-
-    return grayscale
-
-
 def biggest_contour(grayscale):
     """ Finds and retrieves the biggest contour """
 
@@ -68,10 +55,30 @@ def get_biggest_contour(contours):
     return biggest
 
 
+def calculate_distance(pt1: tuple, pt2: tuple):
+    """ Calculates the spacial distance between 2 (x,y) points """
+
+    x1, y1 = pt1
+    x2, y2 = pt2
+    dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+    return dist
+
+
 def closest_point(point: tuple, points):
     """ Returns the closest (x, y) point from a given list of (x, y) points/coordinates. """
 
-    return points[cdist([point], points).argmin()]
+    distances = []
+    for x, y in points:
+        dist = calculate_distance(point, (x, y))
+        distances.append(dist)
+
+    return points[np.array(distances).argmin()]
+
+
+# def closest_point(point: tuple, points):
+#     """ Returns the closest (x, y) point from a given list of (x, y) points/coordinates. """
+#
+#     return points[cdist([point], points).argmin()]
 
 
 def get_corners(grayscale, middle_points=False, centroid=False, max_corners=4, quality_level=0.01, min_distance=15):
@@ -207,8 +214,8 @@ def prepare_for_prediction_single(img: str, shape=(768, 768), as_array=True):
     """ Loads and resizes the image to given shape (default: 768, 768) and returns as a numpy array.
     """
 
-    img = sk_imread(img)
-    img = sk_resize(img, shape) / 255.0
+    img = imread(img)
+    img = img_as_float(resize(img, shape)) / 255.0
 
     out = img
     if as_array:
@@ -230,17 +237,33 @@ def prepare_for_prediction(imgs, shape=(768, 768)):
     return np_array(out)
 
 
-def binary_fill_holes(img: ndarray):
-    """ Fills black holes that reside inside of a binary object (basically a white object in a grayscale image)
-    """
-    mask = np.logical_not(input)
-    tmp = np.zeros(mask.shape, bool)
-    inplace = isinstance(output, numpy.ndarray)
-    if inplace:
-        binary_dilation(tmp, structure, -1, mask, output, 1, origin)
-        numpy.logical_not(output, output)
-    else:
-        output = binary_dilation(tmp, structure, -1, mask, None, 1,
-                                 origin)
-        numpy.logical_not(output, output)
-        return output
+def remove_lonely_small_objects(grayscale):
+    """ Removes lonely small objects from binary mask, the \"grayscale\" parameter must be a grayscale. """
+
+    binary = np_where(grayscale > 0.1, 1, 0)
+    processed = remove_small_objects(binary.astype(bool))
+
+    mask_x, mask_y = np_where(processed == 0)
+    grayscale[mask_x, mask_y] = 0
+
+    return grayscale
+
+
+def remove_smaller_objects(grayscale):
+    """ Removes all objects from binary mask except the biggest one. """
+
+    inter = morphologyEx(grayscale, MORPH_CLOSE, getStructuringElement(MORPH_ELLIPSE, (5, 5)))
+    cnts, _ = findContours(inter, RETR_EXTERNAL, CHAIN_APPROX_NONE)
+    cnt = max(cnts, key=contourArea)
+
+    # TODO: finish this
+
+
+def fill_holes(gray: ndarray, min=200, max=255):
+    """  """
+
+    _, thresh = threshold(gray, min, max, THRESH_BINARY)
+    gray = binary_fill_holes(thresh)
+    gray = img_as_uint(gray)
+
+    return gray

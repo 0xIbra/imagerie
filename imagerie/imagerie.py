@@ -2,8 +2,8 @@ from imagerie.operations.morphology import remove_small_objects, binary_fill_hol
 
 from numpy import array as np_array, argsort, where as np_where, vstack, int0, float32, ndarray
 
-from cv2 import (findContours, contourArea, goodFeaturesToTrack, getPerspectiveTransform, findHomography,
-                 warpPerspective, imread, resize, threshold, morphologyEx, getStructuringElement)
+from cv2 import (findContours, contourArea, goodFeaturesToTrack, getPerspectiveTransform, findHomography, bitwise_and,
+                 warpPerspective, imread, resize, threshold, morphologyEx, getStructuringElement, drawContours)
 
 from cv2 import (RANSAC, RETR_EXTERNAL, CHAIN_APPROX_NONE, CHAIN_APPROX_SIMPLE, THRESH_BINARY, FILLED,
                  MORPH_CLOSE, MORPH_ELLIPSE)
@@ -17,7 +17,7 @@ import numpy as np
 import math
 
 
-def order_4_coordinates_clockwise(points: list):
+def order_4_coordinates_clockwise(points):
     """ Sorts the 4 (x, y) points clockwise starting from top-left point. """
 
     points = np_array(points)
@@ -39,20 +39,15 @@ def order_4_coordinates_clockwise(points: list):
 def biggest_contour(grayscale):
     """ Finds and retrieves the biggest contour """
 
-    contours = findContours(grayscale, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)
-    contour_sizes = [(contourArea(contour), contour) for contour in contours]
-    biggest = max(contour_sizes, key=lambda x: x[0])[1]
+    contours, _ = findContours(grayscale, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)
 
-    return biggest
+    return max(contours, key=contourArea)
 
 
 def get_biggest_contour(contours):
     """ Simply retrieves the biggest contour """
 
-    contour_sizes = [(contourArea(contour), contour) for contour in contours]
-    biggest = max(contour_sizes, key=lambda x: x[0])[1]
-
-    return biggest
+    return max(contours, key=contourArea)
 
 
 def calculate_distance(pt1: tuple, pt2: tuple):
@@ -256,7 +251,11 @@ def remove_smaller_objects(grayscale):
     cnts, _ = findContours(inter, RETR_EXTERNAL, CHAIN_APPROX_NONE)
     cnt = max(cnts, key=contourArea)
 
-    # TODO: finish this
+    out = np.zeros(grayscale.shape, np.uint8)
+    drawContours(out, [cnt], -1, 255, FILLED)
+    out = bitwise_and(grayscale, out)
+
+    return out
 
 
 def fill_holes(gray: ndarray, min=200, max=255):

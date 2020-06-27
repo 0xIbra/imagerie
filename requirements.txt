@@ -1,5 +1,3 @@
 opencv-python
 numpy==1.16.4
 Pillow
-scikit-image
-scipy

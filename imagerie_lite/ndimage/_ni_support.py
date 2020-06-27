@@ -1,5 +1,5 @@
 from __future__ import division, print_function, absolute_import
-from imagerie._lib.six import string_types
+from imagerie_lite._lib.six import string_types
 import numpy
 
 

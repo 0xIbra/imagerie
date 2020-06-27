@@ -2,7 +2,7 @@
 # from models.segmenter import Segmenter
 from PIL import Image
 import cv2
-import imagerie
+import imagerie_lite
 import numpy as np
 
 
@@ -20,7 +20,7 @@ payload = [
 
 # mask = np.array(mask)
 
-# mask = imagerie.binary_fill_holes(mask)
+# mask = imagerie_lite.binary_fill_holes(mask)
 #
 # cv2.imwrite('result.jpg', mask * 255)
 
@@ -36,7 +36,7 @@ cv2.imshow('Mask', gray)
 cv2.waitKey(5000)
 cv2.destroyAllWindows()
 
-mask = imagerie.remove_smaller_objects(gray)
+mask = imagerie_lite.remove_smaller_objects(gray)
 
 cv2.imshow('Result', mask)
 cv2.waitKey(5000)

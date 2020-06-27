@@ -1,13 +1,13 @@
-from imagerie import __VERSION__
+from imagerie_lite import __VERSION__
 import setuptools
 
-long_description = '# Imagerie'
+long_description = '# Imagerie lite'
 
 with open('README.md', 'r') as f:
     long_description = f.read()
 
 setuptools.setup(
-    name='imagerie',
+    name='imagerie-lite',
     version=__VERSION__,
     author='Ibragim Abubakarov',
     author_email='ibragim.ai95@gmail.com',
@@ -16,9 +16,9 @@ setuptools.setup(
     description='Python package grouping together common useful functions and operations.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/ibragim64/imagerie',
-    packages=['imagerie'],
-    install_requires=['opencv-python', 'Pillow', 'numpy', 'scikit-image', 'scipy'],
+    url='https://github.com/ibragim64/imagerie/tree/lite',
+    packages=['imagerie_lite', 'imagerie_lite.ndimage', 'imagerie_lite.operations'],
+    install_requires=['opencv-python', 'pillow', 'numpy'],
     classifiers=[
         'Programming Language :: Python :: 3',
         'Operating System :: OS Independent',

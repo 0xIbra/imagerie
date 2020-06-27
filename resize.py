@@ -1,4 +1,4 @@
-from imagerie.transform.sk_resize import resize
+from imagerie_lite.transform.sk_resize import resize
 import cv2
 
 

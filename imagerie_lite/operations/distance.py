@@ -39,9 +39,9 @@ import numpy as np
 
 from functools import partial
 from collections import namedtuple
-from imagerie._lib.six import callable, string_types
-from imagerie._lib.six import xrange
-from imagerie._lib._util import _asarray_validated
+from imagerie_lite._lib.six import callable, string_types
+from imagerie_lite._lib.six import xrange
+from imagerie_lite._lib._util import _asarray_validated
 
 from . import _distance_wrap
 from . import _hausdorff

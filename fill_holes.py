@@ -1,6 +1,6 @@
 from scipy.ndimage import binary_fill_holes
-# from imagerie.imagerie import binary_fill_holes
-from imagerie.operations import img_as_float, img_as_uint
+# from imagerie_lite.imagerie_lite import binary_fill_holes
+from imagerie_lite.operations import img_as_float, img_as_uint
 from PIL import Image
 import numpy as np
 import cv2

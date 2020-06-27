@@ -1,4 +1,4 @@
-from imagerie.operations.morphology import remove_small_objects, binary_fill_holes
+from imagerie_lite.operations.morphology import remove_small_objects, binary_fill_holes
 
 from numpy import array as np_array, argsort, where as np_where, vstack, int0, float32, ndarray
 
@@ -11,7 +11,7 @@ from cv2 import (RANSAC, RETR_EXTERNAL, CHAIN_APPROX_NONE, CHAIN_APPROX_SIMPLE, 
 from PIL.Image import Image, composite, fromarray, open
 from PIL.JpegImagePlugin import JpegImageFile
 
-from imagerie.operations.img import img_as_uint, img_as_float
+from imagerie_lite.operations.img import img_as_uint, img_as_float
 
 import numpy as np
 import math
@@ -85,7 +85,7 @@ def get_corners(grayscale, middle_points=False, centroid=False, max_corners=4, q
     corners = int0(corners)
 
     if corners is None:
-        raise Exception('[error][imagerie] Could not detect corners.')
+        raise Exception('[error][imagerie_lite] Could not detect corners.')
 
     corners2 = []
     for cr in corners:

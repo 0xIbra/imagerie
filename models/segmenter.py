@@ -12,7 +12,7 @@ from PIL import Image, ImageFilter, ImageOps
 from cv2 import findContours, threshold, RETR_TREE, THRESH_BINARY, CHAIN_APPROX_SIMPLE, cvtColor, imread, COLOR_BGR2RGB
 import cv2
 
-from imagerie.operations.img import img_as_uint, img_as_float
+from imagerie_lite.operations.img import img_as_uint, img_as_float
 
 """ Built-ins """
 import tempfile

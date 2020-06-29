@@ -17,7 +17,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/ibragim64/imagerie/tree/lite',
-    packages=['imagerie_lite', 'imagerie_lite.ndimage', 'imagerie_lite.operations'],
+    packages=['imagerie_lite', 'imagerie_lite.ndimage', 'imagerie_lite.operations', 'imagerie_lite._lib'],
     install_requires=['opencv-python', 'pillow', 'numpy'],
     classifiers=[
         'Programming Language :: Python :: 3',

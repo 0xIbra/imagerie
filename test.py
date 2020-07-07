@@ -1,43 +1,54 @@
-# from scipy.ndimage import binary_fill_holes
+# # from scipy.ndimage import binary_fill_holes
 # from models.segmenter import Segmenter
-from PIL import Image
-import cv2
-import imagerie_lite
+# from PIL import Image
+# import cv2
+# import imagerie_lite
+# import numpy as np
+#
+#
+# payload = [
+#     {
+#         'image': 'audi.jpg',
+#         'background': None
+#     }
+# ]
+#
+# segmenter = Segmenter((768, 768), '.')
+#
+# segmenter.segment(payload)
+
+
+from imutils.perspective import order_points
+from imagerie_lite import order_points as imagerie_order_points
 import numpy as np
 
 
-payload = [
-    {
-        'image': 'audi.jpg',
-        'background': None
-    }
+points = [
+    [290, 193],
+    [293, 129],
+    [102, 90],
+    [105, 203]
 ]
 
-# segmenter = Segmenter((768, 768), '.')
-# mask = segmenter.get_mask('audi.jpg')
+expected = order_points(np.array(points))
+result = imagerie_order_points(np.array(points))
 
-# mask.save('mask.jpg')
+print(expected, '\n\n\n', result)
 
-# mask = np.array(mask)
 
-# mask = imagerie_lite.binary_fill_holes(mask)
+# def order_points_old(pts):
+#     pts = np.array(pts)
+#     rect = np.zeros((4, 2), dtype='float32')
+#     s = pts.sum(axis=1)
+#     rect[0] = pts[np.argmin(s)]
+#     rect[2] = pts[np.argmax(s)]
 #
-# cv2.imwrite('result.jpg', mask * 255)
-
+#     diff = np.diff(pts, axis=1)
+#     rect[1] = pts[np.argmin(diff)]
+#     rect[3] = pts[np.argmax(diff)]
 #
-# mask = Image.open('mask_risky.jpg').convert('L')
-# mask.show()
+#     return rect
 #
-# gray = np.array(mask)
-
-gray = cv2.imread('mask_noisy.jpg', cv2.IMREAD_GRAYSCALE)
-
-cv2.imshow('Mask', gray)
-cv2.waitKey(5000)
-cv2.destroyAllWindows()
-
-mask = imagerie_lite.remove_smaller_objects(gray)
-
-cv2.imshow('Result', mask)
-cv2.waitKey(5000)
-cv2.destroyAllWindows()
+#
+# result = order_points_old(points)
+# print(expected, '\n\n', result)

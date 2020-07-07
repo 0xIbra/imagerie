@@ -17,10 +17,8 @@ import numpy as np
 import math
 
 
-def order_4_coordinates_clockwise(points):
+def order_points(points: ndarray):
     """ Sorts the 4 (x, y) points clockwise starting from top-left point. """
-
-    points = np_array(points)
 
     x_sorted = points[argsort(points[:, 0]), :]
 
@@ -30,10 +28,11 @@ def order_4_coordinates_clockwise(points):
     left_most = left_most[argsort(left_most[:, 1]), :]
     (tl, bl) = left_most
 
-    right_most = right_most[argsort(right_most[:, 1]), :]
-    (tr, br) = right_most
+    # right_most = right_most[argsort(right_most[:, 1]), :]
+    D = calculate_distance(tl[np.newaxis], right_most)
+    (tr, br) = right_most[np.argsort(D)[::-1], :]
 
-    return np_array([tl, tr, br, bl])
+    return np_array([tl, tr, br, bl], dtype='float32')
 
 
 def biggest_contour(grayscale):
@@ -50,13 +49,39 @@ def get_biggest_contour(contours):
     return max(contours, key=contourArea)
 
 
-def calculate_distance(pt1: tuple, pt2: tuple):
+def calculate_distance(pt1, pt2):
     """ Calculates the spacial distance between 2 (x,y) points """
 
-    x1, y1 = pt1
-    x2, y2 = pt2
-    dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
-    return dist
+    if type(pt1) is tuple and type(pt2) is tuple:
+        x1, y1 = pt1
+        x2, y2 = pt2
+        dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+
+        return dist
+
+    result = None
+    pt1_type = type(pt1)
+    pt2_type = type(pt2)
+    if pt2_type is list or pt2_type is ndarray:
+        result = []
+
+        if pt1_type is list or pt1_type is ndarray:
+            pt1 = pt1[0]
+        else:
+            pt1 = pt1
+
+        x1, y1 = pt1
+
+        for pt in pt2:
+            if pt2_type is list:
+                x2, y2 = pt
+            else:
+                x2, y2 = pt.ravel()
+
+            dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+            result.append(dist)
+
+    return np.array(result, dtype='float32')
 
 
 def closest_point(point: tuple, points):
@@ -70,16 +95,10 @@ def closest_point(point: tuple, points):
     return points[np.array(distances).argmin()]
 
 
-# def closest_point(point: tuple, points):
-#     """ Returns the closest (x, y) point from a given list of (x, y) points/coordinates. """
-#
-#     return points[cdist([point], points).argmin()]
-
-
 def get_corners(grayscale, middle_points=False, centroid=False, max_corners=4, quality_level=0.01, min_distance=15):
     """ Returns the (x, y) coordinates of the 4 corners of a rectangular shaped object from binary mask by default.
     However, you can also calculate the top and bottom middle coordinates by providing \"middle_points=True\".
-    And by providint \"centroid=True\", you can get the (x, y) coordinates of the center. """
+    And by providing \"centroid=True\", you can get the (x, y) coordinates of the center. """
 
     corners = goodFeaturesToTrack(grayscale, maxCorners=max_corners, qualityLevel=quality_level, minDistance=min_distance)
     corners = int0(corners)
@@ -93,7 +112,7 @@ def get_corners(grayscale, middle_points=False, centroid=False, max_corners=4, q
         corners2.append([x, y])
 
     corners = np_array(corners2)
-    corners = order_4_coordinates_clockwise(corners)
+    corners = order_points(corners)
     corners = int0(corners)
 
     c1 = tuple(corners[0])
@@ -132,7 +151,8 @@ def get_corners(grayscale, middle_points=False, centroid=False, max_corners=4, q
 
 
 def warp_perspective(image, src_pts, dst_pts, shape: tuple):
-    """ Performs a warpPerspective() operation and expects the 4 (x, y) coordinates of the source and destination image. """
+    """ Performs a warpPerspective() operation and expects the 4 (x, y) coordinates of the source and destination
+    image. """
 
     width, height = shape
 
@@ -266,3 +286,16 @@ def fill_holes(gray: ndarray, min=200, max=255):
     gray = img_as_uint(gray)
 
     return gray
+
+
+def translate_image(img, x_shift: int, y_shift: int):
+    """ Translates image from a given x and y values. """
+
+    a = 1
+    b = 0
+    c = x_shift
+    d = 0
+    e = 1
+    f = y_shift
+
+    return img.transform(img.size, Image.AFFINE, (a, b, c, d, e, f))

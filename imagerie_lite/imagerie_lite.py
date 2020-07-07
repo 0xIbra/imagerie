@@ -30,7 +30,7 @@ def order_points(points: ndarray):
 
     # right_most = right_most[argsort(right_most[:, 1]), :]
     D = calculate_distance(tl[np.newaxis], right_most)
-    (tr, br) = right_most[np.argsort(D)[::-1], :]
+    (br, tr) = right_most[np.argsort(D)[::-1], :]
 
     return np_array([tl, tr, br, bl], dtype='float32')
 

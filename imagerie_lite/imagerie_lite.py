@@ -95,6 +95,12 @@ def closest_point(point: tuple, points):
     return points[np.array(distances).argmin()]
 
 
+def midpoint(ptA, ptB):
+    """ Calculates X,Y middle points from provided 2 points. """
+
+    return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
+
+
 def get_corners(grayscale, middle_points=False, centroid=False, max_corners=4, quality_level=0.01, min_distance=15):
     """ Returns the (x, y) coordinates of the 4 corners of a rectangular shaped object from binary mask by default.
     However, you can also calculate the top and bottom middle coordinates by providing \"middle_points=True\".

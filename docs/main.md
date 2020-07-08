@@ -27,7 +27,10 @@ Finds and retrieves the biggest contour from a grayscale image.
 Simply retrieves and returns the biggest contour from a given list of contours.
 
 ##### [`imagerie.closest_point(point: tuple, points)`](https://github.com/ibragim64/imagerie/blob/ec9087742d165ecf116856574988874b39274325/imagerie/imagerie.py#L62)
-Returns the closest (x, y) point from a given list of (x, y) points/coordinates
+Returns the closest (x, y) point from a given list of (x, y) points/coordinates.
+
+##### [`imagerie_lite.midpoint(ptA, ptB)`](#)
+Calculates the X,Y middle points from provided 2 points.
 
 ##### [`imagerie.get_corners(grayscale, middle_points=False, centroid=False, max_corners=4, quality_level=0.01, min_distance=15)`](https://github.com/ibragim64/imagerie/blob/ec9087742d165ecf116856574988874b39274325/imagerie/imagerie.py#L79)
 Returns the (x, y) coordinates of the 4 corners of a rectangular shaped object from binary mask by default.

@@ -32,6 +32,9 @@ Returns the closest (x, y) point from a given list of (x, y) points/coordinates.
 ##### [`imagerie_lite.midpoint(ptA, ptB)`](#)
 Calculates the X,Y middle points from provided 2 points.
 
+##### [`imagerie_lite.line_intersection(line1: tuple, line2: tuple)`](#)
+Returns the intersection point between two lines.
+
 ##### [`imagerie.get_corners(grayscale, middle_points=False, centroid=False, max_corners=4, quality_level=0.01, min_distance=15)`](https://github.com/ibragim64/imagerie/blob/ec9087742d165ecf116856574988874b39274325/imagerie/imagerie.py#L79)
 Returns the (x, y) coordinates of the 4 corners of a rectangular shaped object from binary mask by default.
 However, you can also calculate the top and bottom middle coordinates by providing `middle_points=True`.

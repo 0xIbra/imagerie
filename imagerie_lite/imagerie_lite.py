@@ -101,6 +101,26 @@ def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
 
+def line_intersection(line1: tuple, line2: tuple):
+    """ Returns the intersection point between two lines. """
+
+    xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
+    ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
+
+    def det(a, b):
+        return a[0] * b[1] - a[1] * b[0]
+
+    div = det(xdiff, ydiff)
+    if div == 0:
+        raise Exception('[imagerie] lines do not intersect')
+
+    d = (det(*line1), det(*line2))
+    x = det(d, xdiff) / div
+    y = det(d, ydiff) / div
+
+    return int(x), int(y)
+
+
 def get_corners(grayscale, middle_points=False, centroid=False, max_corners=4, quality_level=0.01, min_distance=15):
     """ Returns the (x, y) coordinates of the 4 corners of a rectangular shaped object from binary mask by default.
     However, you can also calculate the top and bottom middle coordinates by providing \"middle_points=True\".

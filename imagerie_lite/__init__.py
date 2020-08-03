@@ -1,4 +1,4 @@
-__VERSION__ = '0.0.5'
+__VERSION__ = '0.0.6'
 
 from imagerie_lite.imagerie_lite import (order_points, remove_lonely_small_objects, biggest_contour,
                                          get_biggest_contour, closest_point, get_corners, warp_perspective,

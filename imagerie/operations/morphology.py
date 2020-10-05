@@ -1,7 +1,7 @@
 from __future__ import division, print_function, absolute_import
-from imagerie_lite.ndimage import _ni_support
-from imagerie_lite.ndimage import _nd_image
-from imagerie_lite import ndimage as ndi
+from imagerie.ndimage import _ni_support
+from imagerie.ndimage import _nd_image
+from imagerie import ndimage as ndi
 from warnings import warn
 import numpy as np
 import numpy

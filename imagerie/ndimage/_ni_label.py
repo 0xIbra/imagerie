@@ -1,5 +1,5 @@
 # encoding: utf-8
-# module imagerie_lite.ndimage._ni_label
+# module imagerie.ndimage._ni_label
 # from _ni_label.cpython-36m-x86_64-linux-gnu.so
 # by generator 1.147
 # no doc

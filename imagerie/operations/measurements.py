@@ -1,8 +1,8 @@
 # from . import _ni_support
-from imagerie_lite.ndimage import _ni_label
+from imagerie.ndimage import _ni_label
 # from . import _nd_image
 # from . import morphology
-from imagerie_lite.operations import morphology
+from imagerie.operations import morphology
 import numpy as np
 import numpy
 

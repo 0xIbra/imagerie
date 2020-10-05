@@ -1,5 +1,5 @@
 # encoding: utf-8
-# module imagerie_lite.ndimage._nd_image
+# module imagerie.ndimage._nd_image
 # from _nd_image.cpython-36m-x86_64-linux-gnu.so
 # by generator 1.147
 # no doc

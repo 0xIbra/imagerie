@@ -5,6 +5,8 @@ from PIL.JpegImagePlugin import JpegImageFile
 
 from imagerie.operations.img import img_as_uint, img_as_float
 
+from imagerie.operations.img_format import toimage
+
 import numpy as np
 import math
 import cv2
@@ -336,3 +338,11 @@ def translate_image(img, x_shift: int, y_shift: int):
     f = y_shift
 
     return img.transform(img.size, AFFINE, (a, b, c, d, e, f))
+
+
+def normalize_binary_img(img: np.ndarray):
+    """ Re-converts binary mask image to original grayscale image. """
+
+    _img = toimage(img, channel_axis=2)
+
+    return np.array(_img)

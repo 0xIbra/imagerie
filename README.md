@@ -90,6 +90,9 @@ Converts image to 16 bit unsigned integer format.
 ##### [`imagerie.img_as_float(img)`](https://github.com/ibragim64/imagerie/blob/ec9087742d165ecf116856574988874b39274325/imagerie/operations/img.py#L233)
 Convert an image to floating point format.
 
+##### [`imagerie.normalize_binary_img(img: np.ndarray)`](https://github.com/ibragim64/imagerie/blob/97b21586a8928a75870d71ac25a43f85e83489f8/imagerie/imagerie.py#L343)
+Very useful when re-converting a predicted binary mask img to original grayscale format.
+
 Credits
 -------
  - [Ibragim Abubakarov](https://www.ibragim.fr) <[ibragim.ai95@gmail.com](mailto:ibragim.ai95@gmail.com)>
